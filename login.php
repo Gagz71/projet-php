@@ -16,6 +16,34 @@
     include'parts/menu.php';
     ?>
 
+<!--2) Création d'un système d'authentification avec les pages suivantes :
+    - page de connexion
+        -> Accessible uniquement aux personnes non connectées-->
+    
+    <h1>Connexion</h1>
+
+    <div class="container">
+        <div class="row">
+            <form class="col-12 col-md-6 offset-md-3 my-5" action ="" method="POST">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Email</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Mot de passe</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1">
+                </div>
+                <input type="submit" class="btn btn-success col-132 my-2" value="Connexion">
+            </form>
+
+        </div>
+    </div>
+    
+        
+        
+        
+        
+    
 
 
 
