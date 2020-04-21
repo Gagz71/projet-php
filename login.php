@@ -29,7 +29,7 @@ if(!isConnected()){
 
         //Si pas d'erreurs
         if(!isset($errors)){
-            //Connexion à la BDD
+            
             //Connexion à la BDD
             try{
                 $bdd = new PDO('mysql:host=localhost; dbname=projet_php; charset=utf8', 'root', '');
@@ -42,39 +42,37 @@ if(!isConnected()){
             }
 
             //Vérification que l'email existe dans la BDD
-            $response = $bdd->prepare("SELECT email FROM users WHERE email = ?");
+            $response = $bdd->prepare("SELECT * FROM users WHERE email = ?");
             //execution de la requête
             $response->execute([
                 $_POST['email']
             ]);
-
             //Réponse de la requête enregistré dans variable $user_mail
-            $user_mail = $response->fetch();
-            
+            $user = $response->fetch(PDO::FETCH_ASSOC);
             //Si $user_mail est vide, donc si l'email n'existe pas dans $user_mail
-            if(empty($user_mail)){
+            if(empty($user)){
                 $errors[] = 'Cette adresse email est inconnu ! Veuillez vous inscrire avant de continuer';
+            } else{ //Sinon, si l'email existe
+                
+                //Vérification du mot de passe correspondant
+                //Si c'est pas le bon mot de passe -> $errors
+                if(!password_verify($_POST['password'], $user['password'])){
+                    $errors[] = 'Mot de passe incorrect ! Veuillez ré-essayer';
+                }
             }
 
-        
-            //Création message de succès
-            $successMessage = 'Vous êtes bien connectés !';
+            //Si pas d'erreur nulle part
+            if(!isset($errors)){
+                //Création message de succès
+                $successMessage = 'Vous êtes bien connectés !';
+                //Création d'un sous-tableau "user" 
+                $_SESSION['user'] = $user;
 
-            //Création d'un sous-tableau "user" 
-            $_SESSION['user'] = array(
-                'email' => $_POST['email'], //Contient le nom envoyés par le formulaire
-                'password' => $_POST['password'] //Contient le password envoyés par le formulaire
-            );
+            }
+        }
     }
 
 }
-
-
-
-
-
-
-
 
 
 ?>
@@ -99,6 +97,23 @@ if(!isConnected()){
     
     <h1>Connexion</h1>
 
+    <?php
+    //Affichage des erreurs s'il y en a
+    if(isset($errors)){
+        foreach($errors as $error){
+            echo '<p style="color:red;">' . $error . '</p>';  //on affiche les erreurs en rouge
+        }
+
+    }
+
+    //Affichage du message de succès
+    if(isset($successMessage)){
+        echo '<p style="color:green;">' . htmlspecialchars( $successMessage ) . '</p>';
+    } else {
+        //si l'utilisateur n'est pas connecté, on affiche le formulaire, sinon on affiche un message d'erreur
+        if(!isConnected()){
+    ?>
+
     <div class="container">
         <div class="row">
             <form class="col-12 col-md-6 offset-md-3 my-5" action ="" method="POST">
@@ -110,12 +125,16 @@ if(!isConnected()){
                     <label for="exampleInputPassword1">Mot de passe</label>
                     <input type="password" class="form-control" id="exampleInputPassword1" name="password">
                 </div>
-                <input type="submit" class="btn btn-success col-132 my-2" value="Connexion">
+                <input type="submit" class="btn btn-success col-132 my-2" value="Me connecter">
             </form>
-
         </div>
     </div>
-    
+    <?php
+        } else{
+            echo '<p style="color:red;">Vous êtes déjà connecté !</p>';
+        }
+    }
+    ?>
         
         
         

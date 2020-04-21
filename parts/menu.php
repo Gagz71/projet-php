@@ -1,3 +1,7 @@
+<?php
+//Inclusion de la fonction isConnected()
+require 'functions.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -25,12 +29,26 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Articles</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="login.php" >Connexion</a>
+            <?php
+            //Affichage de la page de déconnexion et profil si l'utilisateur est connecté
+            if(isConnected()){
+                echo '<li class="nav-item">
+                <a class="nav-link" href="profil.php" >Profil</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="logout.php" >Déconnexion</a>
+            </li>';
+            } else{ //Affichage de la page de connexion et d'inscription si on est pas connecté
+                echo '<li class="nav-item">
+                    <a class="nav-link" href="login.php" >Connexion</a>
+                    </li>
             <li class="nav-item">
                 <a class="nav-link" href="registration.php" >Inscription</a>
-            </li>
+            </li>';
+            };
+
+            ?>
+            
             </ul>
             <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Chercher un article">

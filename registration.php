@@ -189,7 +189,7 @@ if(!isConnected()){
                     <div>
                         <div class="g-recaptcha" data-sitekey="6LdcwusUAAAAANsrL9Im7g4HYATJAPuhcBua24qn"></div>
                     </div>
-                    <input type="submit" class="btn btn-success col-132 my-2" value="Connexion">
+                    <input type="submit" class="btn btn-success col-132 my-2" value="M'inscrire">
                 </form>
             </div>
         </div>
