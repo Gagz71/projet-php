@@ -70,11 +70,30 @@ if(!isConnected()){
                 die('Problème de connexion à la BDD: '. $e->getMessage());
             }
 
-            //requête préparé pour création et insertion d'un nouveau compte dans table users
-            $response = $bdd->prepare('INSERT INTO users(email, password, firstname, lastname, admin, register_date, activated, register_token) VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
-
-            //exécution de la requête
+            
+            //Vérification que l'email n'existe pas déjà
+            $response = $bdd->prepare("SELECT email FROM users WHERE email = ?");
+            
+            //execution de la requête
             $response->execute([
+                $_POST['email']
+            ]);
+
+            //Réponse de la requête enregistré dans variable $user
+            $user = $response->fetch();
+            
+            //Si $user n'est pas vide, donc si l'email existe déjà dans $user
+            if(!empty($user)){
+                $errors[] = 'Cette adresse email est déjà utilisé !';
+            }
+
+            //Si pas d'erreur nulle part
+            if(!isset($errors)){
+                //requête préparé pour création et insertion d'un nouveau compte dans table users
+                $response = $bdd->prepare('INSERT INTO users(email, password, firstname, lastname, admin, register_date, activated, register_token) VALUES(?, ?, ?, ?, ?, ?, ?, ?)');
+
+                //exécution de la requête
+                $response->execute([
                 $_POST['email'],
                 password_hash($_POST['password1'], PASSWORD_BCRYPT),
                 $_POST['firstname'], 
@@ -83,19 +102,22 @@ if(!isConnected()){
                 date('Y-m-d H:i:s'), 
                 0,
                 0
-            ]);
+                ]);
 
 
-            //si l'insertion a bien fonctionné
-            if($response->rowCount() > 0){
-                //Création message de succès
-                $successMessage = 'Formulaire envoyé !';
-            } else{
-                $errors[] = "Problème avec la base de données, veuillez ré-essayer !";
+                //si l'insertion a bien fonctionné
+                if($response->rowCount() > 0){
+                    //Création message de succès
+                    $successMessage = 'Formulaire envoyé !';
+                } else{
+                    $errors[] = "Problème avec la base de données, veuillez ré-essayer !";
+                }
+
+                //Fermeture de la requête
+                $response->closeCursor();
+
+
             }
-
-            //Fermeture de la requête
-            $response->closeCursor();
  
         }
 
@@ -175,23 +197,6 @@ if(!isConnected()){
         <?php
     }
         ?>
-    
-        
-        
-        
-        
-    
-
-
-
-
-
-
-
-
-
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script><!--Lien vers le fichier popper de bootstrap à placer avant la fermeture du body-->
     <script src="js/jquery-3.4.1.min.js"></script> 

@@ -1,4 +1,83 @@
+<!--2) Création d'un système d'authentification avec les pages suivantes :
+    - page de connexion
+        -> Accessible uniquement aux personnes non connectées-->
+<?php
+//Inclusion de la fonction isConnected()
+require 'parts/functions.php';
 
+//Démarrage de la session
+session_start();
+
+//Si l'utilisateur n'est pas déjà connecté 
+if(!isConnected()){
+    //Traitement du formulaire
+
+    //appel des variables
+    if(isset($_POST['email']) && isset($_POST['password'])){
+        
+        //blocs des verifs
+
+        //Vérification de l'email
+        if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
+            $errors[] = 'Vous devez saisir un email valide !';
+        }
+
+        //Vérification du mot de passe
+        if(!preg_match('/^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[ !.@#=<>]).{8,1000}$/', $_POST['password'])){
+            $errors[] = "Vous devez saisir un mot de passe avec au moins une min, une MAJ, une lettre et un caractère spécial";
+        }
+
+        //Si pas d'erreurs
+        if(!isset($errors)){
+            //Connexion à la BDD
+            //Connexion à la BDD
+            try{
+                $bdd = new PDO('mysql:host=localhost; dbname=projet_php; charset=utf8', 'root', '');
+
+                //Affichage des erreurs SQL
+                $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            } catch(Exception $e){
+                die('Problème de connexion à la BDD: '. $e->getMessage());
+            }
+
+            //Vérification que l'email existe dans la BDD
+            $response = $bdd->prepare("SELECT email FROM users WHERE email = ?");
+            //execution de la requête
+            $response->execute([
+                $_POST['email']
+            ]);
+
+            //Réponse de la requête enregistré dans variable $user_mail
+            $user_mail = $response->fetch();
+            
+            //Si $user_mail est vide, donc si l'email n'existe pas dans $user_mail
+            if(empty($user_mail)){
+                $errors[] = 'Cette adresse email est inconnu ! Veuillez vous inscrire avant de continuer';
+            }
+
+        
+            //Création message de succès
+            $successMessage = 'Vous êtes bien connectés !';
+
+            //Création d'un sous-tableau "user" 
+            $_SESSION['user'] = array(
+                'email' => $_POST['email'], //Contient le nom envoyés par le formulaire
+                'password' => $_POST['password'] //Contient le password envoyés par le formulaire
+            );
+    }
+
+}
+
+
+
+
+
+
+
+
+
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -8,7 +87,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"><!--Lien vers css de bootstap-->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-    <title>Document</title>
+    <title>Connexion</title>
 </head>
 <body>
     <?php
@@ -16,9 +95,7 @@
     include'parts/menu.php';
     ?>
 
-<!--2) Création d'un système d'authentification avec les pages suivantes :
-    - page de connexion
-        -> Accessible uniquement aux personnes non connectées-->
+
     
     <h1>Connexion</h1>
 
@@ -27,11 +104,11 @@
             <form class="col-12 col-md-6 offset-md-3 my-5" action ="" method="POST">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Email</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+                    <input type="email" class="form-control" id="exampleInputEmail1" name="email">
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Mot de passe</label>
-                    <input type="password" class="form-control" id="exampleInputPassword1">
+                    <input type="password" class="form-control" id="exampleInputPassword1" name="password">
                 </div>
                 <input type="submit" class="btn btn-success col-132 my-2" value="Connexion">
             </form>
