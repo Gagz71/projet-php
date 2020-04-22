@@ -1,7 +1,4 @@
-<?php
-//Inclusion de la fonction isConnected()
-require 'functions.php';
-?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -29,25 +26,21 @@ require 'functions.php';
             <li class="nav-item">
                 <a class="nav-link" href="#">Articles</a>
             </li>
-            <?php
-            //Affichage de la page de déconnexion et profil si l'utilisateur est connecté
-            if(isConnected()){
-                echo '<li class="nav-item">
-                <a class="nav-link" href="profil.php" >Profil</a>
-            </li>
             <li class="nav-item">
-                <a class="nav-link" href="logout.php" >Déconnexion</a>
-            </li>';
-            } else{ //Affichage de la page de connexion et d'inscription si on est pas connecté
-                echo '<li class="nav-item">
                     <a class="nav-link" href="login.php" >Connexion</a>
                     </li>
             <li class="nav-item">
                 <a class="nav-link" href="registration.php" >Inscription</a>
-            </li>';
-            };
-
-            ?>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="profil.php" >Profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="logout.php" >Déconnexion</a>
+            </li>
+            <!--
+            
+            -->
             
             </ul>
             <form class="form-inline my-2 my-lg-0">
