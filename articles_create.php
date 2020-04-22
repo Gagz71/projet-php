@@ -23,39 +23,43 @@ if(
     }
 
     //Si pas d'erreurs
-    //Connexion à la BDD
-    try{
-        $bdd = new PDO('mysql:host=localhost; dbname=projet_php; charset=utf8', 'root', '');
+    if(!isset($errors)){
+        //Connexion à la BDD
+        try{
+            $bdd = new PDO('mysql:host=localhost; dbname=projet_php; charset=utf8', 'root', '');
 
-        //Affichage des erreurs SQL
-        $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            //Affichage des erreurs SQL
+            $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    } catch(Exception $e){
-        die('Problème de connexion à la BDD: '. $e->getMessage());
+        } catch(Exception $e){
+            die('Problème de connexion à la BDD: '. $e->getMessage());
+        }
+
+        //requête préparée pour création et insertion d'un nouvel article
+        $response = $bdd->prepare('INSERT INTO articles(author, create_date, title, content) VALUES(?, ?, ?, ?)');
+
+        //exécution de la requête
+        $response->execute([
+            $_SESSION['user']['id'],
+            date('Y-m-d H:i:s'),
+            $_POST['title'],
+            $_POST['content']
+        ]);
+
+        //Si l'insertion a bien fonctionné
+        //si l'insertion a bien fonctionné
+        if($response->rowCount() > 0){
+            //Création message de succès
+            $successMessage = 'Votre article a bien été créer !';
+        } else{
+            $errors[] = "Problème avec la base de données, veuillez ré-essayer !";
+        }
+
+        //Fermeture de la requête
+        $response->closeCursor();
+
     }
-
-    //requête préparée pour création et insertion d'un nouvel article
-    $response = $bdd->prepare('INSERT INTO articles(author, create_date, title, content) VALUES(?, ?, ?, ?)');
-
-    //exécution de la requête
-    $response->execute([
-        $_SESSION['user']['id'],
-        date('Y-m-d H:i:s'),
-        $_POST['title'],
-        $_POST['content']
-    ]);
-
-    //Si l'insertion a bien fonctionné
-    //si l'insertion a bien fonctionné
-    if($response->rowCount() > 0){
-        //Création message de succès
-        $successMessage = 'Votre article a bien été créer !';
-    } else{
-        $errors[] = "Problème avec la base de données, veuillez ré-essayer !";
-    }
-
-    //Fermeture de la requête
-    $response->closeCursor();
+    
 }
 
 ?>
@@ -97,7 +101,7 @@ if(
 
         //Affichage du message de succès s'il existe et display none du formulaire
         if(isset($successMessage)){
-            echo '<div class="row"><p class="alert alert-success col-12" style="color:green;"> ' . htmlspecialchars( $successMessage ) . ' . Cliquez <a href="articles.php">ici</a> pour le visualiser.</p></div>';
+            echo '<div class="row"><p class="alert alert-success col-12" style="color:green;"> ' . htmlspecialchars( $successMessage ) . '  Cliquez <a href="articles.php">ici</a> pour le visualiser.</p></div>';
         } else{
 
             ?>
@@ -127,7 +131,7 @@ if(
 
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script><!--Lien vers le fichier popper de bootstrap à placer avant la fermeture du body-->
-    <script src="js/jquery-3.4.1.min.js"></script> 
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script><!--Lien vers le fichier jquery de bootstrap à placer avant la fermeture du body--> 
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script><!--Lien vers le fichier js de bootstrap à placer avant la fermeture du body-->
 </body>
 </html>
