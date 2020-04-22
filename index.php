@@ -25,7 +25,7 @@ session_start();
     <div class="row">
         <h1 class="text-center col-12">Bienvenue sur notre pouponnière d'étoiles !</h1>
         <h3 class="text-center col-12">Le premier site qui permet de consulter ou d'ajouter des objets du ciel profond !</h3>
-        <p class="alert alert-info col-6 offset-3 my-4">Veuillez vous connecter pour pouvoir ajouter vos plus belles images du cosmos<br>Vous pouvez créer un compte "utilisateur" sans problème <a href="registration.php">ici</a> !<br>Pour se connecter en administrateur, vous pouvez utiliser le compte suivant :<br>Email : <strong>admin@exemple.com</strong><br>Mot de passe : <strong>aaaaaaaA7</strong></p>
+        <p class="alert alert-info col-6 offset-3 my-4">Veuillez vous connecter pour pouvoir ajouter vos plus belles images du cosmos<br>Vous pouvez créer un compte "utilisateur" sans problème <a href="registration.php">ici</a> !<br>Pour se connecter en administrateur, vous pouvez utiliser le compte suivant :<br>Email : <strong>dd@d.d</strong><br>Mot de passe : <strong>Endomok.71</strong></p>
     </div>
 
     <div class="row">
