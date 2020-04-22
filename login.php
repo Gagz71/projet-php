@@ -47,13 +47,12 @@ if(!isConnected()){
             $response->execute([
                 $_POST['email']
             ]);
-            //Réponse de la requête enregistré dans variable $user_mail
+            //Réponse de la requête enregistré dans variable $user
             $user = $response->fetch(PDO::FETCH_ASSOC);
-            //Si $user_mail est vide, donc si l'email n'existe pas dans $user_mail
+            //Si $user_mail est vide, donc si l'email n'existe pas dans $user
             if(empty($user)){
                 $errors[] = 'Cette adresse email est inconnu ! Veuillez vous inscrire avant de continuer';
-            } else{ //Sinon, si l'email existe
-                
+        
                 //Vérification du mot de passe correspondant
                 //Si c'est pas le bon mot de passe -> $errors
                 if(!password_verify($_POST['password'], $user['password'])){
@@ -64,7 +63,7 @@ if(!isConnected()){
             //Si pas d'erreur nulle part
             if(!isset($errors)){
                 //Création message de succès
-                $successMessage = 'Vous êtes bien connectés !';
+                $successMessage = 'Vous êtes bien connectés ! ';
                 //Création d'un sous-tableau "user" 
                 $_SESSION['user'] = $user;
 
@@ -94,21 +93,25 @@ if(!isConnected()){
     ?>
 
 
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center col-12 mt-5">Connexion</h1>
+        </div>
+    </div>
     
-    <h1>Connexion</h1>
 
     <?php
     //Affichage des erreurs s'il y en a
     if(isset($errors)){
         foreach($errors as $error){
-            echo '<p style="color:red;">' . $error . '</p>';  //on affiche les erreurs en rouge
+            echo '<div class="row"><p class="alert alert-success col-12" style="color:red;">' . $error . '</p></div>';  //on affiche les erreurs en rouge
         }
 
     }
 
     //Affichage du message de succès
     if(isset($successMessage)){
-        echo '<p style="color:green;">' . htmlspecialchars( $successMessage ) . '</p>';
+        echo '<div class="row"><p class="alert alert-success col-12" style="color:green;">' . htmlspecialchars( $successMessage ) . '<a href="index.php">Cliquez ici pour revenir à l\'accueil</a></p></div>';
     } else {
         //si l'utilisateur n'est pas connecté, on affiche le formulaire, sinon on affiche un message d'erreur
         if(!isConnected()){

@@ -108,7 +108,7 @@ if(!isConnected()){
                 //si l'insertion a bien fonctionné
                 if($response->rowCount() > 0){
                     //Création message de succès
-                    $successMessage = 'Formulaire envoyé !';
+                    $successMessage = 'Votre inscription a bien été pris en compte !';
                 } else{
                     $errors[] = "Problème avec la base de données, veuillez ré-essayer !";
                 }
@@ -144,22 +144,24 @@ if(!isConnected()){
     include'parts/menu.php';
     ?>
 
-
+    <div class="row">
+        <h1 class="text-center col-12">Inscription</h1>
+    </div>
     
-    <h1>Inscription</h1>
+    
 
     <?php
 
     //Affichage des erreurs s'il y en a
     if(isset($errors)){
         foreach($errors as $error){
-            echo '<p style="color:red;">'.$error. '</p>';
+            echo '<div class="row"><p class="alert alert-success col-6 text-center" style="color:red;">' . $error . '</p></div>'; 
         }
     }
 
     //Affichage du message de succès et display none du formulaire si pas d'erreurs
     if(isset($successMessage)){
-        echo '<p style="color:green;">' . $successMessage . '</p>';
+        echo '<div class="row"><p class="alert alert-success col-12" style="color:green;">' . htmlspecialchars( $successMessage ) . ' Veuillez vous connecter <a href="login.php">ici</a> </p></div>';
     } else{
         ?>
 
